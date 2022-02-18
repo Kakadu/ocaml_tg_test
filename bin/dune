@@ -1,0 +1,7 @@
+(executable
+ (public_name demo)
+ (package td_demo)
+ (name main)
+ (libraries td_ocaml_demo)
+ (preprocess
+  (pps ppx_inline_test)))

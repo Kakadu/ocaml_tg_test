@@ -1,0 +1,15 @@
+(library
+ (inline_tests)
+ (name td_ocaml_demo)
+ (foreign_stubs
+  (language cxx)
+  (names mystubs)
+  (flags
+   -I/blah/include
+   ;(:include %{project_root}/config/td.libs.sexp)
+   -I/media/mand/.opam/4.13.1+flambda/include))
+ ;(c_library_flags
+ ; (:include %{project_root}/config/td.cflags.sexp))
+ ;(preprocessor_deps %{project_root}/config/config.h)
+ (preprocess
+  (pps ppx_inline_test)))

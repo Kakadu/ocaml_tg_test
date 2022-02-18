@@ -1,0 +1,4 @@
+(test
+ (name td_ocaml_demo)
+ (preprocess
+  (pps ppx_inline_test)))

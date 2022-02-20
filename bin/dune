@@ -1,7 +1,28 @@
+(env
+ (dev
+  (ocamlopt_flags
+   (:standard -warn-error -9-33))))
+
 (executable
  (public_name demo)
  (package td_demo)
  (name main)
- (libraries td_ocaml_demo)
+ (libraries td_demo_lib)
+ (flags
+  (:standard
+   -ccopt
+   -fPIC
+   -cclib
+   -lstdc++
+   -ccopt
+   -L/home/kakadu/.opam/4.13.1+flambda/lib
+   -cclib
+   -ltdclient
+   -cclib
+   -ltdapi
+   -ccopt
+   -Wl,-rpath=/home/kakadu/.opam/4.13.1+flambda/lib
+   ;
+   ))
  (preprocess
   (pps ppx_inline_test)))

@@ -3,6 +3,6 @@
  (libraries dune-configurator))
 
 (rule
- (targets td.libs.sexp td.cflags.sexp)
+ (targets Llib.txt lib.txt Iprefix.txt libs.txt)
  (action
   (run ./discover.exe)))

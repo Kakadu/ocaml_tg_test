@@ -1,15 +1,52 @@
+(env
+ (dev
+  (flags
+   (:standard -warn-error -9-27-33))))
+
 (library
- (inline_tests)
- (name td_ocaml_demo)
+ (name td_demo_lib)
  (foreign_stubs
   (language cxx)
   (names mystubs)
   (flags
-   -I/blah/include
-   ;(:include %{project_root}/config/td.libs.sexp)
-   -I/media/mand/.opam/4.13.1+flambda/include))
+   -fPIC
+   -I/home/kakadu/.opam/4.13.1+flambda/include
+   -ltdclient
+   -ltdapi
+   -lstdc++
+   ;
+   ))
+ (flags
+  (:standard
+   -ccopt
+   -L/home/kakadu/.opam/4.13.1+flambda/lib
+   -cclib
+   -ltdapi
+   -cclib
+   -ltdclient
+   -cclib
+   -lstdc++))
  ;(c_library_flags
  ; (:include %{project_root}/config/td.cflags.sexp))
  ;(preprocessor_deps %{project_root}/config/config.h)
+ (libraries react)
  (preprocess
-  (pps ppx_inline_test)))
+  (pps ppx_inline_test ppx_deriving.show))
+ (inline_tests))
+
+(rule
+ (targets example.exe)
+ (deps
+  %{project_root}/config/Iprefix.txt
+  %{project_root}/config/libs.txt
+  ./td_example.cpp)
+ (action
+  (run
+   g++
+   -o
+   %{targets}
+   %{read-lines:../config/Iprefix.txt}
+   -L%{read-lines:../config/lib.txt}
+   -Wl,-rpath=%{read-lines:../config/lib.txt}
+   td_example.cpp
+   %{read-lines:../config/libs.txt})))

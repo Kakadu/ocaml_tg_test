@@ -1,5 +1,7 @@
 open Format
 
+let () = Format.set_margin 1000
+
 type id_t = int [@@deriving show]
 
 module MessageText = struct
@@ -142,17 +144,12 @@ let (x : event_info React.event), send_x = React.E.create ()
 
 let _ =
   React.E.map
-    (fun e ->
-      print_endline (show_event_info e);
-      (* let () =
-           match e with
-           | A _ -> ()
-           | B m -> Update_New_Message.chat_id m
-           | C _ -> ()
-           | D _ -> ()
-           | UpdateSuperGroup _ -> ()
-         in *)
-      ())
+    (function
+      | Update_New_Message
+          { msg = { content = MessageText { MessageText.text } } } ->
+          Format.printf "text = %S\n%!" text
+      | UpdateSuperGroup _ | UpdateChatPosition _ -> ()
+      | e -> print_endline (show_event_info e))
     x
 
 let () = Callback.register "td_spawn_event" (fun e -> send_x e)

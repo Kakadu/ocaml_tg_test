@@ -5,7 +5,8 @@ let () = Format.set_margin 1000
 type id_t = int [@@deriving show]
 
 module MessageText = struct
-  type t = { text : string } [@@deriving show { with_path = false }]
+  type t = { text : string [@printer Format.pp_print_string] }
+  [@@deriving show { with_path = false }]
 end
 
 module MessageAudio = struct
@@ -68,27 +69,16 @@ type message_content =
   | MessageChatAddMembers of MessageChatAddMembers.t
 [@@deriving show { with_path = false }]
 
-(*
-let pp_message_content ppf = function
-  | MessageUnsupported -> fprintf ppf "MessageUnsupported"
-  | MessageText { MessageText.text } -> fprintf ppf "MessageText _"
- *)
 module Message = struct
   type t = { content : message_content; id : id_t; chat_id : id_t }
   [@@deriving show { with_path = false }]
-
-  (* let pp ppf msg =
-     printf "is_block = %b\n%!" Obj.(is_block @@ repr msg);
-     printf "size = %d\n%!" Obj.(size @@ repr msg);
-     let { content; id; chat_id } = msg in
-     fprintf ppf " { id = %d, chat_id = %d } " id chat_id *)
 end
 
 module UpdateUser = struct
   type t = {
     id : id_t;
-    first_name : string;
-    last_name : string;
+    first_name : string; [@printer Format.pp_print_string]
+    last_name : string; [@printer Format.pp_print_string]
     username : string;
     phone_number : string;
   }
@@ -146,7 +136,7 @@ let _ =
   React.E.map
     (function
       | Update_New_Message
-          { msg = { content = MessageText { MessageText.text } } } ->
+          { msg = { content = MessageText { MessageText.text; _ }; _ } } ->
           Format.printf "text = %S\n%!" text
       | UpdateSuperGroup _ | UpdateChatPosition _ -> ()
       | e -> print_endline (show_event_info e))
